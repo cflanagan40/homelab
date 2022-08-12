@@ -1,0 +1,27 @@
+- name: Install libvirt Ubuntu
+  become: yes
+  ansible.builtin.apt:
+   name:
+     - libvirt-daemon-system
+     - libvirt-clients
+     - bridge-utils
+     - qemu-kvm
+     - virt-manager
+     - virt-viewer
+     - libguestfs-tools
+     - python3-guestfs
+     - python3-libvirt
+     - python3-lxml
+     - virt-top
+   state: present
+
+- name: Create bridge
+  become: yes
+  ansible.builtin.template:
+    src: templates/network/00-installer-config.yaml.j2
+    dest: /etc/netplan/00-installer-config.yaml
+    mode: u=rw,g=r,o=r
+
+- name: Apply Netplan
+  become: yes
+  command: netplan apply

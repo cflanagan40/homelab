@@ -1,0 +1,5 @@
+---
+- hosts: libvirt
+  remote_user: craig 
+  roles:
+    - { role: common }

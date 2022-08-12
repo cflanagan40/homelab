@@ -1,0 +1,39 @@
+- name: Install libvirt Redhat
+  become: yes
+  ansible.builtin.dnf:
+   name:
+     - virt-install
+     - libvirt-daemon-config-network
+     - libvirt-daemon-kvm
+     - qemu-kvm
+     - virt-manager
+     - virt-viewer
+     - libguestfs-tools
+     - python3-libguestfs
+     - python3-libvirt
+     - python3-lxml
+     - virt-top
+   state: present
+
+- name: Create bridge
+  become: yes
+  community.general.nmcli:
+    type: bridge
+    conn_name: "{{ bridge_name }}"
+    stp: no
+    autoconnect: yes
+    state: present
+  register: bridge
+
+- name: debug bridge
+  debug:
+    var: bridge
+
+- name: Create bridge slave on en04
+  become: yes
+  community.general.nmcli:
+    type: bridge-slave
+    ifname: "{{ interface_name }}"
+    conn_name: vm-bridge
+    master: "{{ bridge_name }}"
+    state: present

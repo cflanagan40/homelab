@@ -1,0 +1,27 @@
+---
+source_images:
+  - name: centos-8
+    url: https://cloud.centos.org/centos/8-stream/x86_64/images/CentOS-Stream-GenericCloud-8-20201019.1.x86_64.qcow2
+    image: CentOS-Stream-GenericCloud-8-20201019.1.x86_64.qcow2  
+    
+  - name: ubuntu-20
+    url: https://cloud-images.ubuntu.com/groovy/current/groovy-server-cloudimg-amd64-disk-kvm.img
+    image: groovy-server-cloudimg-amd64-disk-kvm.img
+    
+target_image_dir: /var/lib/libvirt/images
+
+mount_data_path: /data
+mount_data_src: /dev/vm_storage/vm_data_1
+
+bridge_name: br0
+interface_name: eno4
+network_name: localnet
+
+storage_name: default
+storage_source: /dev/vm_storage/vm_data_1
+storage_path: /data
+
+virsh_uri: qemu:///session
+
+image_owner: qemu
+image_group: qemu

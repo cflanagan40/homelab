@@ -1,0 +1,19 @@
+- name: Define libvirt network
+  community.libvirt.virt_net:
+    command: define
+    uri: "{{ virsh_uri }}"
+    name: "{{ network_name }}"
+    xml: '{{ lookup("template", "network/bridge.xml.j2") }}'
+
+- name: Start bridge network
+  community.libvirt.virt_net:
+    command: create
+    uri: "{{ virsh_uri }}"
+    autostart: yes
+    name: "{{ network_name }}"
+
+- name: Autostart bridge network
+  community.libvirt.virt_net:
+    autostart: yes
+    uri: "{{ virsh_uri }}"
+    name: "{{ network_name }}"

@@ -1,0 +1,13 @@
+- name: Install libvirt Fedora
+  include: fedora.yml
+  when: ansible_os_family == 'Redhat'
+
+- name: Install libvirt Debian
+  include: ubuntu.yml
+  when: ansible_os_family == 'Debian'
+
+- name: Setup Storage
+  include: storage.yml
+
+- name: Setup Network
+  include: network.yml

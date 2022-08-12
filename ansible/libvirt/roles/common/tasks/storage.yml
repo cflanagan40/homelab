@@ -1,0 +1,49 @@
+- name: Define Storage
+  community.libvirt.virt_pool:
+    command: define
+    uri: "{{ virsh_uri }}"
+    name: "{{ storage_name }}"
+    xml: '{{ lookup("template", "storage/storage.xml.j2") }}'
+
+- name: Load Storage
+  community.libvirt.virt_pool:
+    command: info
+    uri: "{{ virsh_uri }}"
+  register: storage_pools
+
+- name: Print Storage Info
+  ansible.builtin.debug:
+    msg: Storage info {{ storage_pools.pools }}
+
+- name: set_fact if pool exist
+  set_fact:
+    pool_exists: true
+  loop: "{{ query('dict', storage_pools.pools) }}"
+  when: "storage_name in item.key"
+
+
+- name: Build Storage
+  community.libvirt.virt_pool:
+    command: build
+    uri: "{{ virsh_uri }}"
+    name: "{{ storage_name }}"
+  when: pool_exists == false
+
+- name: Create Storage
+  community.libvirt.virt_pool:
+    command: create
+    uri: "{{ virsh_uri }}"
+    name: "{{ storage_name }}"
+  when: pool_exists == false
+
+- name: Activate Storage
+  community.libvirt.virt_pool:
+    state: active
+    uri: "{{ virsh_uri }}"
+    name: "{{ storage_name }}"
+
+- name: Autostart Storage
+  community.libvirt.virt_pool:
+    autostart: yes
+    uri: "{{ virsh_uri }}"
+    name: "{{ storage_name }}"
